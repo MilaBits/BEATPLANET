@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33501041788402702}
   - component: {fileID: 23846712153745512}
   - component: {fileID: 135915193611996152}
+  - component: {fileID: 114258343903319952}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -35,8 +36,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1023044225664644}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.49, y: 5, z: 2.85}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,6 +85,42 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1023044225664644}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114258343903319952
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1023044225664644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07e81019233ce245b4e0099cf266079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Units: 0
+  CenterSpacing: 2
+  RingSpacing: 1.3
+  Rings:
+  - planet: {fileID: 114103517632653524, guid: 814def1e70251c740b7b76801b8d12ff, type: 2}
+    SectorSelect: 4
+    SectorCount: 4
+    startSector: 0
+    speed: 120
+    pattern: 01000000000000000100000000000000
+  - planet: {fileID: 114103517632653524, guid: 814def1e70251c740b7b76801b8d12ff, type: 2}
+    SectorSelect: 8
+    SectorCount: 8
+    startSector: 0
+    speed: 30
+    pattern: 0000000000000000000000000000000000000000000000000000000000000000
+  - planet: {fileID: 114103517632653524, guid: 814def1e70251c740b7b76801b8d12ff, type: 2}
+    SectorSelect: 16
+    SectorCount: 16
+    startSector: 0
+    speed: 60
+    pattern: 02000000020000000200000002000000000000000100000001000000000000000200000002000000020000000200000000000000010000000100000000000000
+  BlankSectorMaterial: {fileID: 2100000, guid: d2f90de84b943cc4b983598686abfe3a, type: 2}
+  TapSectorMaterial: {fileID: 2100000, guid: 4b4679bc12ae1d646b5568bc7415abf7, type: 2}
+  SlideSectorMaterial: {fileID: 2100000, guid: cb22a73bc7276d245891b7382290613c, type: 2}
 --- !u!135 &135915193611996152
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -44,6 +44,9 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Beater.cs" t="Include" />
+          <e p="Extensions" t="Include">
+            <e p="ExtensionMethods.cs" t="Include" />
+          </e>
           <e p="MainTrack.cs" t="Include" />
           <e p="Node.cs" t="Include" />
           <e p="NodeUI.cs" t="Include" />
