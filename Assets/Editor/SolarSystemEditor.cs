@@ -30,7 +30,7 @@ public class SolarSystemEditor : OdinEditor {
 
                 Handles.DrawLine(ray.GetPoint(radius - dividerHeight), ray.GetPoint(radius + dividerHeight));
 
-                if (systemRing.pattern[j] == Ring.SectorState.Tap) {
+                if (systemRing.pattern[j] == SectorState.Tap) {
                     direction = (sectorSize * j + sectorSize / 2).DegreeToVector();
                     ray = new Ray(system.transform.position, direction);
                     Handles.RectangleHandleCap(
@@ -43,7 +43,7 @@ public class SolarSystemEditor : OdinEditor {
                     continue;
                 }
 
-                if (systemRing.pattern[j] == Ring.SectorState.Slide) {
+                if (systemRing.pattern[j] == SectorState.Slide) {
                     ray = new Ray(system.transform.position, (sectorSize * j + sectorSize / 2f).DegreeToVector());
                     Handles.DrawWireArc(ray.GetPoint(radius), Vector3.up, Vector3.forward, 360, .2f);
                 }

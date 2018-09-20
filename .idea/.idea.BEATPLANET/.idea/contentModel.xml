@@ -10,6 +10,7 @@
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="OrbitEditor.cs" t="Include" />
+          <e p="SingleUnityLayerPropertyDrawer.cs" t="Include" />
           <e p="SolarSystemEditor.cs" t="Include" />
         </e>
         <e p="Plugins" t="Include">
@@ -54,6 +55,9 @@
           <e p="Planet.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="Ring.cs" t="Include" />
+          <e p="Sector.cs" t="Include" />
+          <e p="SectorState.cs" t="Include" />
+          <e p="SingleUnityLayer.cs" t="Include" />
           <e p="SolarSystem.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">

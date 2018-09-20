@@ -6,11 +6,16 @@ using UnityEngine.Rendering;
 
 public class SolarSystem : MonoBehaviour {
     [BoxGroup("System")] public int Units;
+    [BoxGroup("System")] public SingleUnityLayer SectorLayer;
+
+    [BoxGroup("Music")] public int Bpm;
+    [BoxGroup("Music")] public float PassedBeats;
+
+    private float nextBeatTime = 0.0f;
 
     [BoxGroup("Rings")] public float CenterSpacing;
     [BoxGroup("Rings")] public float RingSpacing;
     [BoxGroup("Rings")] public List<Ring> Rings;
-
 
     [BoxGroup("Materials"), LabelText("Blank")]
     public Material BlankSectorMaterial;
@@ -30,7 +35,7 @@ public class SolarSystem : MonoBehaviour {
             ring.planet.name = "Planet " + i;
 
             Ray ray = new Ray(transform.position, ring.StartDirection());
-            ring.planet.transform.localPosition = ray.GetPoint(CenterSpacing + RingSpacing * (float)i);
+            ring.planet.transform.position = ray.GetPoint(CenterSpacing + RingSpacing * (float) i);
         }
 
         GenerateSectorMeshes();
@@ -46,6 +51,7 @@ public class SolarSystem : MonoBehaviour {
 
             float dist = CenterSpacing + RingSpacing * ringIndex;
 
+            List<Transform> meshTransforms = new List<Transform>();
             for (int i = 0; i < ring.SectorCount; i++) {
                 GameObject sector = Instantiate(defaultSector, transform);
                 sector.name = String.Format("Sector {0}, {1}", ringIndex, i);
@@ -58,11 +64,11 @@ public class SolarSystem : MonoBehaviour {
                 float leftdeg = (sectorSize * i);
                 float rightdeg = (sectorSize * (i + 1));
 
-                if (ring.pattern[i] != Ring.SectorState.Slide) {
+                if (ring.pattern[i] != SectorState.Slide) {
                     leftdeg--;
                     rightdeg++;
                 }
-                
+
                 Ray leftRay = new Ray(transform.localPosition, leftdeg.DegreeToVector());
                 Ray rightRay = new Ray(transform.localPosition, rightdeg.DegreeToVector());
 
@@ -74,7 +80,6 @@ public class SolarSystem : MonoBehaviour {
                 mesh.name = "Sector Mesh";
                 mesh.vertices = vertices;
                 mesh.triangles = new[] {0, 1, 3, 0, 3, 2};
-//                mesh.normals = new[] {Vector3.forward, Vector3.forward, Vector3.forward, Vector3.forward};
                 mesh.RecalculateBounds();
                 mesh.RecalculateNormals();
 
@@ -82,24 +87,53 @@ public class SolarSystem : MonoBehaviour {
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
                 renderer.receiveShadows = false;
 
+                Sector SectorComponent = sector.AddComponent<Sector>();
                 switch (ring.pattern[i]) {
-                    case Ring.SectorState.Off:
+                    case SectorState.Off:
+                        SectorComponent.SectorState = SectorState.Off;
                         renderer.material = BlankSectorMaterial;
                         break;
-                    case Ring.SectorState.Tap:
+                    case SectorState.Tap:
+                        SectorComponent.SectorState = SectorState.Tap;
                         renderer.material = TapSectorMaterial;
                         break;
-                    case Ring.SectorState.Slide:
+                    case SectorState.Slide:
+                        SectorComponent.SectorState = SectorState.Slide;
                         renderer.material = SlideSectorMaterial;
                         break;
                 }
+
+
+                sector.AddComponent<MeshCollider>();
+                sector.layer = 10;
+
+                meshTransforms.Add(sector.transform);
             }
+
+            ring.SectorTransforms = meshTransforms;
         }
     }
 
     private void Update() {
-        foreach (Ring ring in Rings) {
-            OrbitPlanet(ring);
+        if (Time.time > nextBeatTime) {
+            nextBeatTime += 60f / Bpm;
+            PassedBeats++;
+
+            foreach (Ring ring in Rings) {
+                switch (ring.SectorSelect) {
+                    case Ring.SectorNumber.Four:
+                        if (Mathf.Floor(PassedBeats) % 4 == 1) ring.Next();
+                        break;
+                    case Ring.SectorNumber.Eight:
+                        if (Mathf.Floor(PassedBeats) % 2 == 1) ring.Next();
+                        break;
+                    case Ring.SectorNumber.Sixteen:
+                        ring.Next();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
     }
 

@@ -96,7 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91472abb6eeff9e4496e1ac50b653b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 1
+  stepTime: 0.1
+  TapTime: 0.1
+  SlideTime: 0.3
+  SectorMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  slide: 0
 --- !u!135 &135290235421872158
 SphereCollider:
   m_ObjectHideFlags: 1
