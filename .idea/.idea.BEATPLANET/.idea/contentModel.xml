@@ -10,8 +10,8 @@
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="OrbitEditor.cs" t="Include" />
+          <e p="RingEditor.cs" t="Include" />
           <e p="SingleUnityLayerPropertyDrawer.cs" t="Include" />
-          <e p="SolarSystemEditor.cs" t="Include" />
         </e>
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
@@ -45,6 +45,13 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Beater.cs" t="Include" />
+          <e p="BeatSynchronizer" t="Include">
+            <e p="BeatCounter.cs" t="Include" />
+            <e p="BeatObserver.cs" t="Include" />
+            <e p="BeatSynchronizer.cs" t="Include" />
+            <e p="PatternCounter.cs" t="Include" />
+            <e p="SynchronizerData.cs" t="Include" />
+          </e>
           <e p="Extensions" t="Include">
             <e p="ExtensionMethods.cs" t="Include" />
           </e>
@@ -59,6 +66,7 @@
           <e p="SectorState.cs" t="Include" />
           <e p="SingleUnityLayer.cs" t="Include" />
           <e p="SolarSystem.cs" t="Include" />
+          <e p="TouchDetect.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="Default_OverlayNoZTest.shader" t="Include" />

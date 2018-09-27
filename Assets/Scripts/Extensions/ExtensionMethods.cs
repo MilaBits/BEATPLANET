@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class ExtensionMethods {
     public static Vector3 DegreeToVector(this float degree) {

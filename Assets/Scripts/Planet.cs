@@ -19,13 +19,23 @@ public class Planet : MonoBehaviour {
 
     private bool running;
 
-    public void NextSector(Vector3 target) {
+    private SphereCollider collider;
+
+    private void Start() {
+        collider = GetComponent<SphereCollider>();
+    }
+
+    public void NextSector(Transform target) {
         start = transform.position;
-        moveTarget = target;
+        moveTarget = target.GetComponent<Renderer>().bounds.center;
         currentTime = 0f;
 
-        if (!slide) stepTime = TapTime;
-        if (slide) stepTime = SlideTime;
+//        if (target.GetComponent<Sector>().SectorState == SectorState.Slide) {
+//            stepTime = SlideTime;
+//        }
+//        else {
+//            stepTime = TapTime;
+//        }
 
         if (coroutine == null) {
             coroutine = MoveToNextSector();
@@ -42,17 +52,6 @@ public class Planet : MonoBehaviour {
         running = false;
     }
 
-    private void OnCollisionStay(Collision other) {
-        Debug.Log("stay");
-        if (other.gameObject.layer == SectorMask &&
-            other.gameObject.GetComponent<Sector>().SectorState == SectorState.Slide) {
-            slide = true;
-        }
-        else {
-            slide = false;
-        }
-    }
-
     IEnumerator MoveToNextSector() {
         while (running) {
             percentage = currentTime / stepTime;
@@ -64,11 +63,21 @@ public class Planet : MonoBehaviour {
         }
     }
 
-//    IEnumerator MoveToNextSector(Vector3 target) {
-//        
-//        while (Vector3.Distance(transform.position, target) > 0.01f) {
-//            transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * speed);
-//            yield return null;
-//        }
-//    }
+    public ClosestSectorData GetClosestSector() {
+        ClosestSectorData closest = new ClosestSectorData();
+        closest.distance = 100f;
+        foreach (Collider sector in Physics.OverlapSphere(transform.position, collider.radius, SectorMask)) {
+            float dist = Vector3.Distance(sector.bounds.center, transform.position);
+            if (Vector3.Distance(sector.bounds.center, transform.position) < closest.distance) {
+                closest = new ClosestSectorData {distance = dist, sector = sector.GetComponent<Sector>()};
+            }
+        }
+
+        return closest;
+    }
+
+    public struct ClosestSectorData {
+        public float distance;
+        public Sector sector;
+    }
 }

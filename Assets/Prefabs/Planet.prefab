@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23758837255587434}
   - component: {fileID: 135290235421872158}
   - component: {fileID: 114103517632653524}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Planet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepTime: 0.1
   TapTime: 0.1
-  SlideTime: 0.3
+  SlideTime: 0.5
   SectorMask:
     serializedVersion: 2
     m_Bits: 1024
@@ -113,5 +113,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.75
   m_Center: {x: 0, y: 0, z: 0}

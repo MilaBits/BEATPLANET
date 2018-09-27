@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-[Serializable]
-public class Ring {
+[RequireComponent(typeof(SolarSystem)), RequireComponent(typeof(BeatObserver))]
+public class Ring : MonoBehaviour {
+    [BoxGroup("Ring")] public SolarSystem system;
     [BoxGroup("Ring"), InlineEditor] public Planet planet;
 
     [BoxGroup("Ring"), OnValueChanged("UpdatePatternList"), LabelText("Sectors"), EnumToggleButtons]
@@ -16,7 +16,6 @@ public class Ring {
     [HideInInspector] public int SectorCount;
 
     [BoxGroup("Ring"), Range(0, 15)] public int startSector;
-    [BoxGroup("Ring")] public float speed;
 
     [BoxGroup("Ring"), EnumToggleButtons]
     [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, ShowPaging = false)]
@@ -24,6 +23,37 @@ public class Ring {
 
     public List<Transform> SectorTransforms;
     private int planetSector;
+
+
+    [BoxGroup("Materials"), LabelText("Blank")]
+    public Material BlankSectorMaterial;
+
+    [BoxGroup("Materials"), LabelText("Tap")]
+    public Material TapSectorMaterial;
+
+    [BoxGroup("Materials"), LabelText("Slide")]
+    public Material SlideSectorMaterial;
+
+    private BeatObserver beatObserver;
+
+    private void Start() {
+        beatObserver = GetComponent<BeatObserver>();
+
+        GenerateSectorMeshes();
+
+        planet = Instantiate(planet, transform);
+        planet.name = "Planet " + transform.GetSiblingIndex();
+
+        Ray ray = new Ray(transform.position, StartDirection());
+        planet.transform.position =
+            ray.GetPoint(system.CenterSpacing + system.RingSpacing * (float) transform.GetSiblingIndex());
+    }
+
+    private void Update() {
+        if (beatObserver.beatMask != 0) {
+            Next();
+        }
+    }
 
     public Vector3 StartDirection() {
         planetSector = startSector;
@@ -61,17 +91,80 @@ public class Ring {
         }
     }
 
-    private Vector3 DegreeToVector(float degree) {
-        float radians = degree * (Mathf.PI / 180);
-        Vector3 degreeVector = new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians));
-        return degreeVector;
+    private void GenerateSectorMeshes() {
+        GameObject defaultSector = new GameObject();
+        defaultSector.AddComponent<MeshRenderer>();
+        defaultSector.AddComponent<MeshFilter>();
+
+        float dist = system.CenterSpacing + system.RingSpacing * transform.GetSiblingIndex();
+
+        List<Transform> meshTransforms = new List<Transform>();
+        for (int i = 0; i < SectorCount; i++) {
+            GameObject sector = Instantiate(defaultSector, transform);
+            sector.name = String.Format("Sector {0}, {1}", transform.GetSiblingIndex(), i);
+            Mesh mesh = sector.GetComponent<MeshFilter>().mesh;
+
+            Vector3[] vertices = new Vector3[4];
+
+            float sectorSize = -360f / SectorCount;
+
+            float leftdeg = (sectorSize * i);
+            float rightdeg = (sectorSize * (i + 1));
+
+            if (pattern[i] != SectorState.Slide) {
+                leftdeg--;
+                rightdeg++;
+            }
+
+            Ray leftRay = new Ray(transform.localPosition, leftdeg.DegreeToVector());
+            Ray rightRay = new Ray(transform.localPosition, rightdeg.DegreeToVector());
+
+            vertices[0] = leftRay.GetPoint(dist + system.RingSpacing / 2); //topleft
+            vertices[1] = rightRay.GetPoint(dist + system.RingSpacing / 2); //topright
+            vertices[2] = leftRay.GetPoint(dist - system.RingSpacing / 2); //bottomleft
+            vertices[3] = rightRay.GetPoint(dist - system.RingSpacing / 2); //bottomright
+
+            mesh.name = "Sector Mesh";
+            mesh.vertices = vertices;
+            mesh.triangles = new[] {0, 1, 3, 0, 3, 2};
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+
+            MeshRenderer renderer = sector.GetComponent<MeshRenderer>();
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+
+            Sector SectorComponent = sector.AddComponent<Sector>();
+            switch (pattern[i]) {
+                case SectorState.Off:
+                    SectorComponent.SectorState = SectorState.Off;
+                    renderer.material = BlankSectorMaterial;
+                    break;
+                case SectorState.Tap:
+                    SectorComponent.SectorState = SectorState.Tap;
+                    renderer.material = TapSectorMaterial;
+                    break;
+                case SectorState.Slide:
+                    SectorComponent.SectorState = SectorState.Slide;
+                    renderer.material = SlideSectorMaterial;
+                    break;
+            }
+
+
+            sector.AddComponent<MeshCollider>();
+            sector.layer = 10;
+
+            meshTransforms.Add(sector.transform);
+        }
+
+        SectorTransforms = meshTransforms;
     }
 
     public void Next() {
         if (planetSector == SectorCount - 1) planetSector = 0;
         else planetSector++;
 
-        planet.NextSector(SectorTransforms[planetSector].GetComponent<Renderer>().bounds.center);
+        planet.NextSector(SectorTransforms[planetSector]);
     }
 
     public enum SectorNumber {
