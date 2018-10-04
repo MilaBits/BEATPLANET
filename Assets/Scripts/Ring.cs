@@ -15,6 +15,7 @@ public class Ring : MonoBehaviour {
 
     [HideInInspector] public int SectorCount;
 
+    [BoxGroup("Ring")] public GameObject SectorGameObject;
     [BoxGroup("Ring"), Range(0, 15)] public int startSector;
 
     [BoxGroup("Ring"), EnumToggleButtons]
@@ -23,7 +24,6 @@ public class Ring : MonoBehaviour {
 
     public List<Transform> SectorTransforms;
     private int planetSector;
-
 
     [BoxGroup("Materials"), LabelText("Blank")]
     public Material BlankSectorMaterial;
@@ -92,15 +92,11 @@ public class Ring : MonoBehaviour {
     }
 
     private void GenerateSectorMeshes() {
-        GameObject defaultSector = new GameObject();
-        defaultSector.AddComponent<MeshRenderer>();
-        defaultSector.AddComponent<MeshFilter>();
-
         float dist = system.CenterSpacing + system.RingSpacing * transform.GetSiblingIndex();
 
         List<Transform> meshTransforms = new List<Transform>();
         for (int i = 0; i < SectorCount; i++) {
-            GameObject sector = Instantiate(defaultSector, transform);
+            GameObject sector = Instantiate(SectorGameObject, transform);
             sector.name = String.Format("Sector {0}, {1}", transform.GetSiblingIndex(), i);
             Mesh mesh = sector.GetComponent<MeshFilter>().mesh;
 
@@ -134,7 +130,7 @@ public class Ring : MonoBehaviour {
             renderer.shadowCastingMode = ShadowCastingMode.Off;
             renderer.receiveShadows = false;
 
-            Sector SectorComponent = sector.AddComponent<Sector>();
+            Sector SectorComponent = sector.GetComponent<Sector>();
             switch (pattern[i]) {
                 case SectorState.Off:
                     SectorComponent.SectorState = SectorState.Off;
@@ -150,8 +146,7 @@ public class Ring : MonoBehaviour {
                     break;
             }
 
-
-            sector.AddComponent<MeshCollider>();
+            Collider collider = sector.AddComponent<MeshCollider>();
             sector.layer = 10;
 
             meshTransforms.Add(sector.transform);

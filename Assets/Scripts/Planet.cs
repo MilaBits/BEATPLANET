@@ -30,6 +30,7 @@ public class Planet : MonoBehaviour {
         moveTarget = target.GetComponent<Renderer>().bounds.center;
         currentTime = 0f;
 
+        
 //        if (target.GetComponent<Sector>().SectorState == SectorState.Slide) {
 //            stepTime = SlideTime;
 //        }
@@ -38,7 +39,7 @@ public class Planet : MonoBehaviour {
 //        }
 
         if (coroutine == null) {
-            coroutine = MoveToNextSector();
+            coroutine = MoveToNextSector(target);
         }
 
         if (!running) {
@@ -52,7 +53,7 @@ public class Planet : MonoBehaviour {
         running = false;
     }
 
-    IEnumerator MoveToNextSector() {
+    IEnumerator MoveToNextSector(Transform target) {
         while (running) {
             percentage = currentTime / stepTime;
             transform.position = Vector3.Lerp(start, moveTarget, percentage);
@@ -65,7 +66,7 @@ public class Planet : MonoBehaviour {
 
     public ClosestSectorData GetClosestSector() {
         ClosestSectorData closest = new ClosestSectorData();
-        closest.distance = 100f;
+        closest.distance = 1f;
         foreach (Collider sector in Physics.OverlapSphere(transform.position, collider.radius, SectorMask)) {
             float dist = Vector3.Distance(sector.bounds.center, transform.position);
             if (Vector3.Distance(sector.bounds.center, transform.position) < closest.distance) {
