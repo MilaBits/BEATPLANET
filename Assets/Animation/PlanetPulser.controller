@@ -5,7 +5,7 @@ AnimatorController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Pulser
+  m_Name: PlanetPulser
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Pulse
@@ -105,7 +105,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Pulse
-  m_Speed: 2
+  m_Speed: 5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101599797837517754}
@@ -118,7 +118,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 1886300c80510964fbdad4b0b5994fbf, type: 2}
+  m_Motion: {fileID: 7400000, guid: d04190cdc01cfe54da7be7e42c5c053f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

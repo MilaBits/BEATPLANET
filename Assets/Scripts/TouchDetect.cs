@@ -64,6 +64,12 @@ public class TouchDetect : MonoBehaviour {
             }
 
             if (tapped) {
+                Debug.Log("Tapped: " + tapped.name);
+                if (tapped.GetComponent<Planet>() != null) {
+                    Planet planet = tapped.GetComponent<Planet>();
+                    if (planet.CurrentSector.SectorState != SectorState.Off)
+                    planet.Tap();
+                }
                 Tapped.Invoke(tapped);
                 Taps.Add(tapped.name);
                 lastTapTime = Time.time;

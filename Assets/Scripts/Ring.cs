@@ -158,7 +158,10 @@ public class Ring : MonoBehaviour {
     public void Next() {
         if (planetSector == SectorCount - 1) planetSector = 0;
         else planetSector++;
-
+        
+        //TODO: fix
+        SectorTransforms[planetSector].GetComponent<Sector>().animator.SetTrigger("Pulse");
+        
         planet.NextSector(SectorTransforms[planetSector]);
     }
 

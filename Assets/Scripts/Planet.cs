@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Planet : MonoBehaviour {
     public float stepTime = 0.1f;
     public float TapTime = 0.1f;
     public float SlideTime = 0.3f;
     public LayerMask SectorMask;
+
+    public int TapScore = 5;
 
     public bool slide = false;
 
@@ -21,25 +25,56 @@ public class Planet : MonoBehaviour {
 
     private SphereCollider collider;
 
+    private TrailRenderer trailRenderer;
+
+    private Sector lastSector;
+    public Sector CurrentSector;
+
+    private Animator animator;
+
+    private SolarSystem system;
+
+    public bool Touchable;
+
     private void Start() {
         collider = GetComponent<SphereCollider>();
+        trailRenderer = GetComponent<TrailRenderer>();
+        animator = GetComponent<Animator>();
+
+        system = transform.parent.parent.parent.GetComponent<SolarSystem>();
+    }
+
+    public void Tap() {
+        if (Touchable) {
+            Touchable = false;
+            system.Score += TapScore;
+        }
     }
 
     public void NextSector(Transform target) {
+        lastSector = CurrentSector;
+        CurrentSector = target.GetComponent<Sector>();
+
         start = transform.position;
-        moveTarget = target.GetComponent<Renderer>().bounds.center;
+        moveTarget = CurrentSector.GetComponent<Renderer>().bounds.center;
         currentTime = 0f;
 
-        
-//        if (target.GetComponent<Sector>().SectorState == SectorState.Slide) {
-//            stepTime = SlideTime;
-//        }
-//        else {
-//            stepTime = TapTime;
-//        }
+        if (CurrentSector.SectorState != SectorState.Off) {
+            Touchable = true;
+            Debug.Log(this.name + " touchable");
+            animator.SetTrigger("Pulse");
+        }
+
+        if (CurrentSector.SectorState == SectorState.Slide && lastSector.SectorState == SectorState.Slide) {
+            trailRenderer.enabled = true;
+        }
+        else {
+            trailRenderer.enabled = false;
+            trailRenderer.Clear();
+        }
 
         if (coroutine == null) {
-            coroutine = MoveToNextSector(target);
+            coroutine = MoveToNextSector(CurrentSector.transform);
         }
 
         if (!running) {
@@ -57,6 +92,8 @@ public class Planet : MonoBehaviour {
         while (running) {
             percentage = currentTime / stepTime;
             transform.position = Vector3.Lerp(start, moveTarget, percentage);
+
+//            if (percentage > .6f) Touchable = false;
 
             if (percentage > .95f) transform.position = moveTarget;
             currentTime += Time.deltaTime;
