@@ -8,6 +8,9 @@ public class TouchDetect : MonoBehaviour {
     [BoxGroup("Detection")] public Camera Camera;
     [BoxGroup("Detection")] public LayerMask TouchLayer;
 
+    public AudioSource Tap;
+    public AudioSource Slide;
+
     public float TapCooldown = .1f;
     [BoxGroup("Tap", false)] private float lastTapTime = 0f;
     public TransformUnityEvent Tapped;
@@ -67,8 +70,10 @@ public class TouchDetect : MonoBehaviour {
                 Debug.Log("Tapped: " + tapped.name);
                 if (tapped.GetComponent<Planet>() != null) {
                     Planet planet = tapped.GetComponent<Planet>();
-                    if (planet.CurrentSector.SectorState != SectorState.Off)
-                    planet.Tap();
+                    if (planet.CurrentSector.SectorState != SectorState.Off) {
+                        planet.Tap();
+                        Tap.Play();
+                    }
                 }
                 Tapped.Invoke(tapped);
                 Taps.Add(tapped.name);

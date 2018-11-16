@@ -30,7 +30,7 @@ public class Planet : MonoBehaviour {
     private Sector lastSector;
     public Sector CurrentSector;
 
-    private Animator animator;
+//    private Animator animator;
 
     private SolarSystem system;
 
@@ -39,7 +39,7 @@ public class Planet : MonoBehaviour {
     private void Start() {
         collider = GetComponent<SphereCollider>();
         trailRenderer = GetComponent<TrailRenderer>();
-        animator = GetComponent<Animator>();
+//        animator = GetComponent<Animator>();
 
         system = transform.parent.parent.parent.GetComponent<SolarSystem>();
     }
@@ -62,7 +62,7 @@ public class Planet : MonoBehaviour {
         if (CurrentSector.SectorState != SectorState.Off) {
             Touchable = true;
             Debug.Log(this.name + " touchable");
-            animator.SetTrigger("Pulse");
+//            animator.SetTrigger("Pulse");
         }
 
         if (CurrentSector.SectorState == SectorState.Slide && lastSector.SectorState == SectorState.Slide) {

@@ -61,6 +61,7 @@
           <e p="Orbit.cs" t="Include" />
           <e p="Planet.cs" t="Include" />
           <e p="Player.cs" t="Include" />
+          <e p="PulseOnBeat.cs" t="Include" />
           <e p="Ring.cs" t="Include" />
           <e p="Sector.cs" t="Include" />
           <e p="SectorState.cs" t="Include" />
