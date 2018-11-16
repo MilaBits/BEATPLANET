@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 54956652285088190}
   - component: {fileID: 96515209603021074}
   - component: {fileID: 95305956072026452}
+  - component: {fileID: 114204845993408116}
   m_Layer: 9
   m_Name: Planet
   m_TagString: Untagged
@@ -239,8 +240,21 @@ MonoBehaviour:
   SectorMask:
     serializedVersion: 2
     m_Bits: 1024
+  TapScore: 5
   slide: 0
+  CurrentSector: {fileID: 0}
   Touchable: 0
+--- !u!114 &114204845993408116
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1075559401388078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55193312f66fd764c8c4ad1a8bd03422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135290235421872158
 SphereCollider:
   m_ObjectHideFlags: 1
